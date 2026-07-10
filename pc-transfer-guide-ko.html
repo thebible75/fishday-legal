@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>채아피싱 PC로 전송 준비 안내</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --fg: #1a1a1a; --bg: #fff; --muted: #666; --line: #e3e3e3;
+    --card: #f6f7f9; --accent: #1f7a6d; --accent-fg: #fff;
+    --warn-bg: #fff6e5; --warn-fg: #8a5a00; --warn-line: #f0d089;
+    --pill: #e8f2f0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --fg: #e6e6e6; --bg: #121212; --muted: #9a9a9a; --line: #2a2a2a;
+      --card: #1c1d1f; --accent: #2fa392; --accent-fg: #06231f;
+      --warn-bg: #2a2213; --warn-fg: #e8c479; --warn-line: #4d3d16;
+      --pill: #16302b;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    max-width: 760px; margin: 0 auto; padding: 24px 18px 72px;
+    font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+    line-height: 1.7; color: var(--fg); background: var(--bg);
+  }
+  h1 { font-size: 1.55rem; margin: .2em 0 .1em; }
+  h2 { font-size: 1.18rem; margin: 1.8em 0 .4em; padding-top: .4em; }
+  h3 { font-size: 1.02rem; margin: 1.2em 0 .3em; }
+  p { margin: .5em 0; }
+  .meta { color: var(--muted); font-size: .9rem; margin-bottom: 1.4em; }
+  .lead { font-size: 1.02rem; }
+  a { color: var(--accent); }
+
+  /* 단계 */
+  ol.steps { list-style: none; counter-reset: s; padding: 0; margin: .6em 0; }
+  ol.steps > li { counter-increment: s; position: relative; padding: 4px 0 14px 42px; }
+  ol.steps > li::before {
+    content: counter(s); position: absolute; left: 0; top: 2px;
+    width: 28px; height: 28px; border-radius: 50%; background: var(--pill); color: var(--accent);
+    display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .9rem;
+  }
+  code, kbd {
+    background: var(--card); border: 1px solid var(--line); border-radius: 6px;
+    padding: 1px 6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .9em;
+  }
+
+  /* 경고/도움 박스 */
+  .box {
+    border: 1px solid var(--warn-line); background: var(--warn-bg); color: var(--warn-fg);
+    border-radius: 12px; padding: 12px 14px; margin: 12px 0; font-size: .95rem;
+  }
+  .box b { color: var(--warn-fg); }
+
+  /* OS 탭 */
+  .tabs { display: flex; gap: 8px; margin: 1em 0 .4em; flex-wrap: wrap; }
+  .tab {
+    padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line);
+    background: transparent; color: var(--fg); cursor: pointer; font-size: .95rem; font-family: inherit;
+  }
+  .tab[aria-selected="true"] { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 2em 0; }
+</style>
+</head>
+<body>
+<h1>PC로 전송 — 공유 폴더 준비 안내</h1>
+<p class="meta">채아피싱 · 폰 사진·영상을 같은 Wi-Fi 의 PC 로 복사 · 최종 업데이트: 2026-07-10</p>
+
+<p class="lead">이 방식은 PC 에 <b>공유 폴더</b>를 하나 만들고, 앱이 그 폴더로 사진을 <b>SMB</b> 로 복사합니다.
+폰과 PC 가 <b>같은 공유기(같은 네트워크)</b>에 있으면 유선·무선 상관없습니다. 아래에서 내 PC 에 맞는
+탭을 골라 <b>① 공유 폴더 설정 → ② IP·계정 확인 → ③ 앱에 입력</b> 순서로 준비하세요.</p>
+
+<div class="box">더 간편한 방법을 원하시면, 공유 폴더·계정 설정이 <b>필요 없는</b>
+<b>« QR 로 PC 연결 »</b> 방식도 있습니다(앱 설정에서 선택). 이 문서는 기존 <b>SMB 공유 폴더</b> 방식 전용입니다.</div>
+
+<h2>준비 방법</h2>
+
+<div class="tabs" role="tablist">
+  <button class="tab" role="tab" data-os="windows">Windows</button>
+  <button class="tab" role="tab" data-os="mac">macOS</button>
+</div>
+
+<!-- Windows -->
+<div class="panel" data-panel="windows">
+  <h3>1. 공유 폴더 설정</h3>
+  <ol class="steps">
+    <li>사진을 저장할 폴더를 <b>우클릭 → 속성 → [공유] 탭</b>.</li>
+    <li><b>[공유]</b> 버튼 → 내 계정을 추가하고 사용 권한을 <b>«읽기/쓰기»</b> 로 바꿉니다.</li>
+    <li><b>[고급 공유]</b> → <b>«이 폴더 공유»</b> 체크. 여기 표시된 <b>공유 이름</b>을 앱의
+      <code>공유 이름</code> 칸에 그대로 입력합니다.</li>
+    <li><b>제어판 → 네트워크 및 공유 센터 → 고급 공유 설정</b> 에서
+      <b>«파일 및 프린터 공유»</b> 를 켭니다.</li>
+    <li>앱 <b>계정</b> = Windows <b>로그인 계정 + 비밀번호</b>.</li>
+  </ol>
+  <div class="box">⚠ <b>비밀번호가 없는 계정은 연결이 거부</b>됩니다. 계정에 비밀번호를 설정하세요.</div>
+
+  <h3>2. IP 주소 찾기</h3>
+  <p>시작 → <code>cmd</code> 실행 → <code>ipconfig</code> 입력 → <b>«IPv4 주소»</b> (예: <code>192.168.0.10</code>).</p>
+
+  <h3>3. 계정 이름 찾기</h3>
+  <p>시작 → <code>cmd</code> 실행 → <code>whoami</code> 입력 → <b>«PC이름\계정이름»</b> 에서
+    <code>\</code> 뒤가 사용자 이름입니다.</p>
+</div>
+
+<!-- macOS -->
+<div class="panel" data-panel="mac">
+  <h3>1. 공유 폴더 설정</h3>
+  <ol class="steps">
+    <li><b>시스템 설정 → 일반 → 공유</b> 에서 <b>«파일 공유»</b> 를 켭니다.</li>
+    <li><b>[공유 폴더]</b> 에 원하는 폴더를 추가합니다. 그 <b>폴더 이름이 «공유 이름»</b> 입니다.</li>
+    <li><b>[옵션…]</b> → <b>«SMB를 사용하여 파일과 폴더 공유»</b> 체크 → 아래에서
+      내 계정을 체크하고 비밀번호를 입력합니다.</li>
+    <li>앱 <b>계정</b> = Mac 계정의 <b>«단축 이름» + 비밀번호</b>.</li>
+  </ol>
+
+  <h3>2. IP 주소 찾기</h3>
+  <p><b>시스템 설정 → Wi-Fi → [세부사항…] → «IP 주소»</b>. 또는 앱 주소 칸에
+    <code>컴퓨터이름.local</code> 을 사용해도 됩니다.</p>
+</div>
+
+<hr>
+
+<h2>앱에서 연결하기</h2>
+<ol class="steps">
+  <li>앱 <b>설정 → PC로 전송</b> 을 엽니다.</li>
+  <li><b>PC 주소</b>(IP 또는 <code>이름.local</code>), <b>공유 이름</b>, <b>계정·비밀번호</b> 를 입력합니다.
+    (같은 네트워크의 PC 는 <b>«자동 찾기»</b> 로 주소를 채울 수도 있습니다.)</li>
+  <li><b>연결 확인</b> 후 <b>전송</b> 을 누르면 사진이 복사됩니다. 다음부터는 <b>새 사진만</b> 보냅니다(증분).</li>
+</ol>
+<p>사진은 공유 폴더 안에 <b><code>FishingDay/년/월</code></b> 로 자동 정리됩니다.</p>
+
+<h2>연결이 안 될 때</h2>
+<ul>
+  <li>폰과 PC 가 <b>같은 공유기</b>에 있는지 확인하세요.</li>
+  <li>PC <b>방화벽</b>에서 <b>파일 공유(SMB)</b> 를 허용했는지 확인하세요.</li>
+  <li>공유기의 <b>«AP 격리 / 기기 간 통신 차단»</b> 이 켜져 있으면 꺼주세요.</li>
+  <li><b>주소·공유 이름·계정</b> 을 다시 확인하세요(<b>대소문자 구분</b>).</li>
+  <li>Windows 는 <b>계정에 비밀번호</b>가 있어야 하며, 없으면 연결이 거부됩니다.</li>
+</ul>
+
+<h2>안전</h2>
+<p>전송은 <b>사용자 소유의 PC 로만</b> 이루어지며, 개발자·제3자 서버로는 어떤 데이터도 가지 않습니다.
+연결과 사진은 <b>같은 네트워크(로컬)</b> 안에서만 오갑니다. PC 접속 정보는 <b>기기 내부에만</b> 저장됩니다.</p>
+
+<p class="meta">문의: <a href="mailto:incoad@gmail.com">incoad@gmail.com</a></p>
+
+<script>
+  // OS 탭 — 감지된 OS 를 기본 선택(Windows/Mac 만 지원, 그 외는 Windows).
+  function detectOs() {
+    var p = (navigator.userAgentData && navigator.userAgentData.platform || navigator.platform || navigator.userAgent || "").toLowerCase();
+    if (p.indexOf("mac") >= 0) return "mac";
+    return "windows";
+  }
+  var tabs = document.querySelectorAll(".tab");
+  var panels = document.querySelectorAll(".panel");
+  function selectTab(osKey) {
+    tabs.forEach(function (t) { t.setAttribute("aria-selected", String(t.dataset.os === osKey)); });
+    panels.forEach(function (pn) { pn.classList.toggle("active", pn.dataset.panel === osKey); });
+  }
+  tabs.forEach(function (t) { t.addEventListener("click", function () { selectTab(t.dataset.os); }); });
+  selectTab(detectOs());
+</script>
+</body>
+</html>
