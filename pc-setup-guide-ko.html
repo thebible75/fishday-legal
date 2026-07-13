@@ -219,9 +219,15 @@ PC 접속 정보와 인증 토큰은 <b>기기 내부에만</b> 저장됩니다.
     if (p.indexOf("linux") >= 0 || p.indexOf("x11") >= 0) return "linux";
     return "windows";
   }
-  var os = detectOs();
+  // 폰/태블릿에서 열면 PC OS 를 알 수 없으므로 자동 감지 대신 선택 안내(iPhone/Android는 platform 이 win/mac 이 아니라
+  // 기존엔 Windows 로 잘못 폴백됐다). 모바일이면 다운로드/탭 기본은 Windows(가장 흔한 PC)로 두고 사용자가 고른다.
+  function isMobile() { return /iphone|ipad|ipod|android/i.test(navigator.userAgent || ""); }
+  var mobile = isMobile();
+  var os = mobile ? "windows" : detectOs();
   var main = FILES[os];
-  document.getElementById("dl-detected").textContent = "감지된 운영체제: " + main.name;
+  document.getElementById("dl-detected").textContent = mobile
+    ? "폰에서는 PC 운영체제를 자동으로 알 수 없어요. 아래에서 PC의 운영체제를 선택하세요."
+    : "감지된 운영체제: " + main.name;
   var b = document.getElementById("dl-main");
   b.textContent = "⬇  " + main.name + " 다운로드";
   b.href = BASE + main.file;
